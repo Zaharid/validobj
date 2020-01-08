@@ -1,3 +1,5 @@
+![](https://github.com/Zaharid/validobj/workflows/Python%20package/badge.svg)
+
 # Validobj
 
 Validobj is library that takes semistructured data (for example JSON and YAML
