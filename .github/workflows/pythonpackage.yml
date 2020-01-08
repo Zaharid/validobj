@@ -30,7 +30,7 @@ jobs:
     - name: Build and publish
       if: startsWith(github.event.ref, 'refs/tags')
       env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        FLIT_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        FLIT_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         flit publish
