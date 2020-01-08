@@ -17,5 +17,6 @@ test = [
 	'pytest-cov'
 ]
 doc = [
-    'ruamel.yaml'
+    'sphinx',
+    'ruamel.yaml',
 ]
