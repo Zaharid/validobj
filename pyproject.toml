@@ -9,3 +9,13 @@ author-email = "zaharid@protonmail.com"
 home-page = "https://github.com/Zaharid/validobj"
 classifiers = ["License :: OSI Approved :: MIT License"]
 description-file="README.md"
+
+[tool.flit.metadata.requires-extra]
+test = [
+    'hypothesis',
+	'pytest',
+	'pytest-cov'
+]
+doc = [
+    'ruamel.yaml'
+]
