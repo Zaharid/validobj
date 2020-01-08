@@ -100,3 +100,16 @@ print(parse_input(inp, CIConf))
 #)
 #
 ```
+
+## Installation
+
+The package can be installed with `pip`:
+
+```
+python3 -m pip install validobj
+```
+
+The code is hosted at
+
+<https://github.com/Zaharid/validobj>
+
