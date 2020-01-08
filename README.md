@@ -4,19 +4,18 @@
 
 Validobj is library that takes semistructured data (for example JSON and YAML
 configuration files) and converts it to more structured Python objects. It
-places the emphasis on good error messages and simplicity of implementation and
-usage rather than full generality, extensibility or runtime performance. This
-makes it particularly suitable for processing configuration files and giving
-good user feedback. It is best viewed as a tool to deal with the heavy lifting
-of validation, to be complemented by purpose specific checks.
+places the emphasis on:
 
-Validobj has no schema and instead relies on newer Python functionality (such as
-[dataclasses](https://docs.python.org/3/library/dataclasses.html)) and
-[enums](https://docs.python.org/3/library/enum.html) of the data as well as a
-small subset of the [typing](https://docs.python.org/3/library/typing.html)
-module to specify the expected shape.
+  - Good error messages (rather than avoiding extra work in the error handling
+	code).
+  - Schema defined in terms of
+	[dataclasses](https://docs.python.org/3/library/dataclasses.html) and other
+	high level objects such as
+	[enums](https://docs.python.org/3/library/enum.html), as well as a subset of
+	the [typing](https://docs.python.org/3/library/typing.html) module.
+  - Simplicity of implementation (rather than full generality).
 
-It requires Python 3.7 and has no other dependencies.
+Validobj requires Python 3.7 and has no other dependencies.
 
 ## Documentation
 
