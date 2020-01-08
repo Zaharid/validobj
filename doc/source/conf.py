@@ -15,6 +15,7 @@ import sys
 from recommonmark.transform import AutoStructify
 
 sys.path.insert(0, os.path.abspath('..'))
+import validobj
 
 
 # -- Project information -----------------------------------------------------
@@ -24,7 +25,7 @@ copyright = '2019, Zahari Kassabov'
 author = 'Zahari Kassabov'
 
 # The full version, including alpha/beta/rc tags
-release = 0.1
+release = validobj.__version__
 
 
 # -- General configuration ---------------------------------------------------
