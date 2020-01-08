@@ -6,6 +6,6 @@ build-backend = "flit.buildapi"
 module = "validobj"
 author = "Zahari Kassabov"
 author-email = "zaharid@protonmail.com"
-home-page = "https://github.com/Zaharid/re5"
+home-page = "https://github.com/Zaharid/validobj"
 classifiers = ["License :: OSI Approved :: MIT License"]
 description-file="README.md"
