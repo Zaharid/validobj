@@ -16,6 +16,10 @@ module to specify the expected shape.
 
 It requires Python 3.7 and has no other dependencies.
 
+## Documentation
+
+https://validobj.readthedocs.io/en/latest/
+
 ## Example
 
 ```python
