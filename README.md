@@ -1,6 +1,7 @@
 [![Tests](https://github.com/Zaharid/validobj/workflows/Python%20package/badge.svg)](https://github.com/Zaharid/validobj/actions?query=workflow%3A%22Python+package%22)
 [![Coverage](https://codecov.io/gh/Zaharid/validobj/branch/master/graph/badge.svg)](https://codecov.io/gh/Zaharid/validobj)
 [![PyPI](https://img.shields.io/pypi/v/validobj.svg)](https://pypi.org/project/validobj/)
+[![RTD](https://readthedocs.org/projects/validobj/badge/)](https://readthedocs.org/projects/validobj/)
 
 # Validobj
 
