@@ -1,4 +1,5 @@
 ![](https://github.com/Zaharid/validobj/workflows/Python%20package/badge.svg)
+![](https://img.shields.io/pypi/v/validobj.svg)
 
 # Validobj
 
