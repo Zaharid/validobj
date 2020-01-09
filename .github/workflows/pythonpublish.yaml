@@ -30,7 +30,6 @@ jobs:
         pytest
 
     - name: Publish
-      if: startsWith(github.event.ref, 'refs/tags')
       env:
         FLIT_USERNAME: ${{ secrets.PYPI_USERNAME }}
         FLIT_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
