@@ -1,6 +1,7 @@
 [![Tests](https://github.com/Zaharid/validobj/workflows/Python%20package/badge.svg)](https://github.com/Zaharid/validobj/actions?query=workflow%3A%22Python+package%22)
 [![Coverage](https://codecov.io/gh/Zaharid/validobj/branch/master/graph/badge.svg)](https://codecov.io/gh/Zaharid/validobj)
 [![PyPI](https://img.shields.io/pypi/v/validobj.svg)](https://pypi.org/project/validobj/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/validobj.svg)](https://anaconda.org/conda-forge/validobj)
 [![RTD](https://readthedocs.org/projects/validobj/badge/)](https://readthedocs.org/projects/validobj/)
 
 # Validobj
@@ -119,6 +120,12 @@ The package can be installed with `pip`:
 
 ```
 python3 -m pip install validobj
+```
+
+As well as with `conda`, from the `conda-forge` channel:
+
+```
+conda install validobj -c conda-forge
 ```
 
 The code is hosted at
