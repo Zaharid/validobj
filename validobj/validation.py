@@ -10,7 +10,7 @@ The validation module implements the :py:func:`parse_input` function.
 
 
 """
-from typing import Set, Union, Any, Optional, TypeVar
+from typing import Set, Union, Any, Optional, TypeVar, Type
 from collections.abc import Mapping
 import dataclasses
 import enum
@@ -211,7 +211,10 @@ def _handle_typing_spec(value, spec):
         raise NotImplementedError(f"Validation not implemented for {spec}")
 
 
-def parse_input(value, spec):
+T = TypeVar("T")
+
+
+def parse_input(value: Any, spec: Type[T]) -> T:
     """
     This is the main entry point of the validobj module.
     Validates and processes the input value based on the provided
