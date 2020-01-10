@@ -200,8 +200,7 @@ Additionally lists of strings can be turned into instances of
 Dataclasses
 ^^^^^^^^^^^
 
-The support for :py:mod:`dataclasses` includes annotations and default values, and it
-works recursively.
+The :py:mod:`dataclasses` module supported and input is parsed based on the type annotations:
 
 .. doctest::
 
@@ -214,9 +213,18 @@ works recursively.
     >>> @dataclasses.dataclass
     ... class File:
     ...     location: str
-    ...     meta: FileMeta = FileMeta()
+    ...     meta: FileMeta = dataclasses.field(default_factory=FileMeta)
     >>> validobj.parse_input({'location': 'https://example.com/file'}, File)
     File(location='https://example.com/file', meta=FileMeta(description='', keywords=[], author=''))
+
+Fields with defaults (or default factories) are inferred. Fields that are
+themselves dataclasses are processed recursively.
+
+
+Rich tracebacks are produced in case of validation error:
+
+.. doctest::
+
     >>> validobj.parse_input({'location': 'https://example.com/file', 'meta':{'keywords': [1, 'x', 'xx']}}, File) #doctest: +SKIP
     Traceback (most recent call last):
     ...

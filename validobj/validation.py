@@ -223,7 +223,7 @@ def parse_input(value, spec):
     value : Any
         The value to be processed.
     spec : :py:class:`type` or :py:mod:`typing` specification
-        The targed specification.
+        The target specification.
 
     Returns
     -------
