@@ -9,7 +9,8 @@ Validobj is library that takes semistructured data (for example JSON and YAML
 configuration files) and converts it to more structured Python objects. It
 places the emphasis on:
 
-  - Good error messages (rather than avoiding extra work in the error handling
+  - [Good error messages](https://validobj.readthedocs.io/en/latest/errors.html)
+    (rather than avoiding extra work in the error handling
 	code).
   - Schema defined in terms of
 	[dataclasses](https://docs.python.org/3/library/dataclasses.html) and other
