@@ -40,18 +40,15 @@ def test_alternative_display():
 
 
 def test_mismatch_message():
-    try:
+    with pytest.raises(WrongKeysError) as exinfo:
         parse_input({'a': 1, 'x': 2, 'y': 2}, Fieldset)
-    except WrongKeysError as e:
-        assert 'x' in str(e)
-    try:
+    assert 'x' in str(exinfo.value)
+    with pytest.raises(WrongKeysError) as exinfo:
         parse_input({'a': 1, 'x': 2, 'b': 2}, Fieldset)
-    except WrongKeysError as e:
-        assert 'x' in str(e)
-    try:
+    assert 'x' in str(exinfo.value)
+    with pytest.raises(WrongKeysError) as exinfo:
         parse_input({'a': 1}, Fieldset)
-    except WrongKeysError as e:
-        assert 'b' in str(e)
+    assert 'b' in str(exinfo.value)
 
     e = WrongKeysError(missing={'a'}, unknown={'x'}, valid={'a', 'b'})
     assert 'x' in str(e)
@@ -70,22 +67,18 @@ def test_enum_error():
 
 
 def test_correct_items():
-    try:
+    with pytest.raises(WrongListItemError) as exinfo:
         parse_input([1, 'x', 2], List[int])
-    except WrongListItemError as e:
-        assert e.wrong_index == 1
+    assert exinfo.value.wrong_index == 1
 
-    try:
+    with pytest.raises(WrongFieldError) as exinfo:
         parse_input({'a': 1, 'b': 'x'}, Mapping[str, int])
-    except WrongFieldError as e:
-        assert e.wrong_field == 'b'
+    assert exinfo.value.wrong_field == 'b'
 
-    try:
+    with pytest.raises(WrongFieldError) as exinfo:
         parse_input({1: 2, 'a': 1}, Mapping[str, int])
-    except WrongFieldError as e:
-        assert e.wrong_field == 1
+    assert exinfo.value.wrong_field == 1
 
-    try:
+    with pytest.raises(WrongFieldError) as exinfo:
         parse_input({'a': 'uno', 'b': 2}, Fieldset)
-    except WrongFieldError as e:
-        assert e.wrong_field == 'a'
+    assert exinfo.value.wrong_field == 'a'
