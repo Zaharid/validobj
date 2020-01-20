@@ -15,7 +15,7 @@ Generic errors
 --------------
 
 All exceptions raised by Validobj are subclasses of
-:py:class:`validpbj.errors.ValidationError`. Therefore it can be used in an
+:py:class:`validobj.errors.ValidationError`. Therefore it can be used in an
 ``except`` block to tell if the validation succeeded.
 
 .. doctest::
