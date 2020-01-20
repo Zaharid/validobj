@@ -30,6 +30,25 @@ All exceptions raised by Validobj are subclasses of
     ...
     Validation succeeded
 
+Errors for Unions
+-----------------
+
+Errors for union types (including :py:class:`typing.Optional`) result in a
+:py:class:`validobj.errors.UnionValidationError` being raised. The exception
+contains a ``causes`` attribute containing the reasons for the mismatch for
+each of the individual types.
+
+.. doctest::
+
+    >>> from typing import Optional, List
+    >>> validobj.parse_input([1, "dos"], Optional[List[int]])
+    Traceback (most recent call last):
+    ...
+    UnionValidationError: No match for any possible type:
+    Not a valid match for 'typing.List[int]': Cannot process list item 2.
+    Not a valid match for 'NoneType': Expecting value of type 'NoneType', not list.
+
+
 Key mismatch
 -------------
 

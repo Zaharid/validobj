@@ -13,6 +13,7 @@ __all__ = (
     'NotAnEnumItemError',
     'WrongFieldError',
     'WrongListItemError',
+    'UnionValidationError',
 )
 
 
@@ -58,6 +59,23 @@ class AlternativeDisplay:
 
 class ValidationError(Exception):
     """Exception raised when validation cannot be performed for any reason."""
+
+
+class UnionValidationError(ValidationError):
+    """Exception raised when value cannot be coerced to any of the members of
+    an union.
+
+    Parameters
+    ----------
+    causes : List[ValidationError]
+        A list of ``ValidationError`` exceptions containing the failure for
+        each of the members of the union.
+
+    """
+
+    def __init__(self, *args, causes, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.causes = causes
 
 
 class MismatchError(ValidationError):

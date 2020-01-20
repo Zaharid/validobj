@@ -1,14 +1,17 @@
 import enum
 import dataclasses
-from typing import List, Mapping
+from typing import List, Mapping, Optional
+
+import pytest
 
 from validobj.validation import parse_input
 from validobj.errors import (
+    UnionValidationError,
     AlternativeDisplay,
     NotAnEnumItemError,
     WrongListItemError,
     WrongFieldError,
-    WrongKeysError
+    WrongKeysError,
 )
 
 
@@ -52,6 +55,13 @@ def test_mismatch_message():
 
     e = WrongKeysError(missing={'a'}, unknown={'x'}, valid={'a', 'b'})
     assert 'x' in str(e)
+
+
+def test_union_error_message():
+    with pytest.raises(UnionValidationError) as exinfo:
+        parse_input('FIELD3', Optional[E])
+    assert 'FIELD1' in str(exinfo.value)
+    assert any(isinstance(c, NotAnEnumItemError) for c in exinfo.value.causes)
 
 
 def test_enum_error():

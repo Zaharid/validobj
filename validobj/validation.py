@@ -17,6 +17,7 @@ import enum
 
 from validobj.errors import (
     ValidationError,
+    UnionValidationError,
     WrongTypeError,
     WrongKeysError,
     NotAnEnumItemError,
@@ -54,7 +55,9 @@ def _parse_std_list_collection(value, spec):
 
 
 def _typename(tp):
-    return tp.__name__
+    if hasattr(tp, '__name__'):
+        return tp.__name__
+    return str(tp)
 
 
 def _sane_typing_args(tp):
@@ -292,14 +295,20 @@ def parse_input(value: Any, spec: Type[T]) -> T:
         # Remove one level of exceptions
         if len(spec) == 1:
             return parse_input(value, spec[0])
+        error_strings = []
+        causes = []
         for tp in spec:
-            errors = []
             try:
                 return parse_input(value, tp)
             except ValidationError as e:
-                errors.append(str(e))
+                error_strings.append(f"Not a valid match for {_typename(tp)!r}: {e}")
+                exc = e
+                causes.append(exc)
                 continue
-        raise ValidationError(f"No match for any possible type: {' '.join(errors)}")
+        all_errors = '\n'.join(error_strings)
+        raise UnionValidationError(
+            f"No match for any possible type:\n{all_errors}", causes=causes
+        )
     if spec in {tuple, set, frozenset}:
         return _parse_std_list_collection(value, spec)
 
