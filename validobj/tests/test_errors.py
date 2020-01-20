@@ -41,15 +41,15 @@ def test_alternative_display():
 
 def test_mismatch_message():
     try:
-        parse_input({'a': 1, 'x':2, 'y':2}, Fieldset)
+        parse_input({'a': 1, 'x': 2, 'y': 2}, Fieldset)
     except WrongKeysError as e:
         assert 'x' in str(e)
     try:
-        parse_input({'a': 1, 'x':2, 'b':2}, Fieldset)
+        parse_input({'a': 1, 'x': 2, 'b': 2}, Fieldset)
     except WrongKeysError as e:
         assert 'x' in str(e)
     try:
-        parse_input({'a': 1, }, Fieldset)
+        parse_input({'a': 1}, Fieldset)
     except WrongKeysError as e:
         assert 'b' in str(e)
 
