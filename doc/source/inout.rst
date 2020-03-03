@@ -47,6 +47,12 @@ All of the above input is supported verbatim
     >>> validobj.parse_input({'a': 4, 'b': [1,2,"tres", None]}, dict)
     {'a': 4, 'b': [1, 2, 'tres', None]}
 
+Following :py:mod:`typing`, ``type(None)`` can be simply written as ``None``.
+
+.. doctest::
+
+    >>> validobj.parse_input(None, None)
+
 Collections
 ^^^^^^^^^^^
 

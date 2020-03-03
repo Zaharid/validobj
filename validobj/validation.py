@@ -11,6 +11,7 @@ The validation module implements the :py:func:`parse_input` function.
 
 """
 from typing import Set, Union, Any, Optional, TypeVar, Type
+from types import FunctionType
 from collections.abc import Mapping
 import dataclasses
 import enum
@@ -205,7 +206,7 @@ def _handle_typing_spec(value, spec):
             return _parse_homogeneous_typying_collection(value, spec.__origin__, inner)
         else:
             return _parse_typying_tuple(value, spec.__args__)
-    elif spec.__origin__ is Mapping:
+    elif spec.__origin__ in (Mapping, dict):
         return _parse_typing_mapping(value, spec)
     elif spec.__origin__ is Union:
         tp = _sane_typing_args(spec.__args__)
@@ -289,8 +290,12 @@ def parse_input(value: Any, spec: Type[T]) -> T:
         2
 
     """
-    if spec is dataclasses.MISSING or spec is Any or spec is None:
+    if spec is dataclasses.MISSING or spec is Any:
         return value
+    # None is a special calse, as specified in
+    # https://docs.python.org/3/library/typing.html#type-aliases
+    if spec is None:
+        return parse_input(value, type(None))
     if isinstance(spec, tuple):
         # Remove one level of exceptions
         if len(spec) == 1:
@@ -319,6 +324,11 @@ def parse_input(value: Any, spec: Type[T]) -> T:
 
     if hasattr(spec, '__origin__'):
         return _handle_typing_spec(value, spec)
+
+    # Handle typing.NewType
+    if isinstance(spec, FunctionType) and hasattr(spec, '__supertype__'):
+        # Don't use __name__ in the error because we want the input type
+        tp = spec.__supertype__
     else:
         tp = spec
 

@@ -1,12 +1,14 @@
 import dataclasses
 import enum
-from typing import Tuple, Set, List, Mapping, Any, Union, Callable
+from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType
 
 import pytest
 from hypothesis import given
 from hypothesis.strategies import builds, register_type_strategy, booleans
 
 from validobj.validation import parse_input, ValidationError
+
+stralias = NewType('stralias', str)
 
 
 class Attributes(enum.Flag):
@@ -23,7 +25,7 @@ class MemOptions(enum.Enum):
 
 @dataclasses.dataclass(frozen=True)
 class Flag:
-    name: str
+    name: stralias
 
 
 @dataclasses.dataclass
@@ -132,3 +134,8 @@ dbstrat = builds(Db).map(invert_db)
 @given(dbstrat)
 def test_arbitrary_valid(db):
     parse_input(db, Db)
+
+def test_none():
+    assert parse_input(None, None) is None
+    with pytest.raises(ValidationError):
+        parse_input("Some value", None)
