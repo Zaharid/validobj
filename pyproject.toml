@@ -12,7 +12,7 @@ description-file="README.md"
 
 [tool.flit.metadata.requires-extra]
 test = [
-    'hypothesis',
+    'hyphotesis',
 	'pytest',
 	'pytest-cov'
 ]
