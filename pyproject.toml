@@ -12,9 +12,9 @@ description-file="README.md"
 
 [tool.flit.metadata.requires-extra]
 test = [
-    'hyphotesis',
-	'pytest',
-	'pytest-cov'
+    'hypothesis',
+    'pytest',
+    'pytest-cov'
 ]
 doc = [
     'sphinx',
