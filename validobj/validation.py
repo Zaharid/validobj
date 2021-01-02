@@ -197,6 +197,8 @@ def _parse_enum(value, spec):
 
 
 def _handle_typing_spec(value, spec):
+    if not hasattr(spec, '__args__'):
+        return parse_input(value, spec.__origin__)
     if spec.__origin__ in (list, set, frozenset):
         inner = _sane_typing_args(spec.__args__)
         return _parse_homogeneous_typying_collection(value, spec.__origin__, inner)

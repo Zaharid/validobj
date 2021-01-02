@@ -95,7 +95,7 @@ def test_bad_inp():
 
 def test_not_supported():
     with pytest.raises(NotImplementedError):
-        parse_input(5, Callable)
+        parse_input(5, Callable[[int], set])
 
 
 def test_collections():
