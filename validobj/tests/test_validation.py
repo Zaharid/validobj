@@ -119,6 +119,7 @@ def invert_db(db):
         return row
 
     db['rows'] = list(map(invert_row, db['rows']))
+    db['metadata'] = dict(db['metadata'])
     db['size'] = db['size'].name
     db['attributes'] = list(
         m
