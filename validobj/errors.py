@@ -152,7 +152,7 @@ class NotAnEnumItemError(AlternativeDisplay, ValidationError, ValueError):
 
     def __init__(self, bad_item, enum_class):
         super().__init__(
-            f"{bad_item!r} is not a valid member of {enum_class.__name__!r}.",
+            f"{bad_item!r} is not a valid member of {enum_class.__name__!r}. ",
             bad_item=bad_item,
             alternatives=enum_class.__members__,
         )
