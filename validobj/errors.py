@@ -199,3 +199,18 @@ class WrongListItemError(ValidationError):
     def __init__(self, *args, wrong_index, **kwargs):
         self.wrong_index = wrong_index
         super().__init__(*args, **kwargs)
+
+
+class WrongLiteralError(ValidationError):
+    """"Exception raised when some literal is incorrect"""
+
+    def __init__(self, value, reference):
+        self.value = value
+        self.reference = reference
+        super().__init__(value, reference)
+
+    def __str__(self):
+        return (
+            f"Wrong literal. Expecting {'one of ' if len(self.reference) > 1 else ''}"
+            f"'{self.reference!r}'. Got '{self.value!r}'"
+        )

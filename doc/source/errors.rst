@@ -192,3 +192,15 @@ original enum class and  will suggest fixes to the typos. Additionally
     The above exception was the direct cause of the following exception:
     ...
     WrongListItemError: Cannot process item 2 into 'DiskPermissions'.
+
+Wrong Literals
+--------------
+
+Wrong Literals provide an exception with the tested and valid values::
+
+    >>> import validobj
+    >>> import typing
+    >>> validobj.parse_input(5, typing.Literal[6, typing.Literal[7], 8])
+    Traceback (most recent call last):
+    ...
+    WrongLiteralError: Wrong literal. Expecting one of '[6, 7, 8]'. Got '5'
