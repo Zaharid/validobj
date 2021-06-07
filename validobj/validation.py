@@ -11,6 +11,13 @@ The validation module implements the :py:func:`parse_input` function.
 
 """
 from typing import Set, Union, Any, Optional, TypeVar, Type
+
+try:
+    from typing import Literal
+except ImportError:  # pragma: nocover
+    HAVE_LITERAL = False
+else:
+    HAVE_LITERAL = True
 from types import FunctionType
 from collections.abc import Mapping
 import dataclasses
@@ -24,6 +31,7 @@ from validobj.errors import (
     NotAnEnumItemError,
     WrongFieldError,
     WrongListItemError,
+    WrongLiteralError,
 )
 
 __all__ = ('parse_input',)
@@ -196,8 +204,25 @@ def _parse_enum(value, spec):
     return _parse_single_enum(value, spec)
 
 
+def _reduce_literal_args(args):
+    l = []
+    for arg in args:
+        if getattr(arg, '__origin__', None) is Literal:
+            l.extend(_reduce_literal_args(arg.__args__))
+        else:
+            l.append(arg)
+    return l
+
+
+def _parse_literal(value, references):
+    for reference in references:
+        if type(value) == type(reference) and value == reference:
+            return value
+    raise WrongLiteralError(value, references)
+
+
 def _handle_typing_spec(value, spec):
-    if not hasattr(spec, '__args__'):
+    if not hasattr(spec, '__args__'):  # pragma: nocover
         return parse_input(value, spec.__origin__)
     if spec.__origin__ in (list, set, frozenset):
         inner = _sane_typing_args(spec.__args__)
@@ -213,6 +238,8 @@ def _handle_typing_spec(value, spec):
     elif spec.__origin__ is Union:
         tp = _sane_typing_args(spec.__args__)
         return parse_input(value, tp)
+    elif HAVE_LITERAL and spec.__origin__ is Literal:
+        return _parse_literal(value, _reduce_literal_args(spec.__args__))
     else:
         raise NotImplementedError(f"Validation not implemented for {spec}")
 

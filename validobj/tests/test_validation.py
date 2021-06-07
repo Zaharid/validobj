@@ -2,6 +2,13 @@ import dataclasses
 import enum
 from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType
 
+try:
+    from typing import Literal
+except ImportError: # pragma: nocover
+    HAVE_LITERAL = False
+else:
+    HAVE_LITERAL = True
+
 import pytest
 from hypothesis import given
 from hypothesis.strategies import builds, register_type_strategy, booleans
@@ -136,7 +143,12 @@ dbstrat = builds(Db).map(invert_db)
 def test_arbitrary_valid(db):
     parse_input(db, Db)
 
+
 def test_none():
     assert parse_input(None, None) is None
     with pytest.raises(ValidationError):
         parse_input("Some value", None)
+
+@pytest.mark.skipif(not HAVE_LITERAL, reason="Literal not found")
+def test_literal():
+    assert parse_input(5, Literal[5, Literal[1, 3]]) == 5

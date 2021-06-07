@@ -2,6 +2,13 @@ import enum
 import dataclasses
 from typing import List, Mapping, Optional
 
+try:
+    from typing import Literal
+except ImportError:  # pragma: nocover
+    HAVE_LITERAL = False
+else:
+    HAVE_LITERAL = True
+
 import pytest
 
 from validobj.validation import parse_input
@@ -12,6 +19,7 @@ from validobj.errors import (
     WrongListItemError,
     WrongFieldError,
     WrongKeysError,
+    WrongLiteralError,
 )
 
 
@@ -82,3 +90,18 @@ def test_correct_items():
     with pytest.raises(WrongFieldError) as exinfo:
         parse_input({'a': 'uno', 'b': 2}, Fieldset)
     assert exinfo.value.wrong_field == 'a'
+
+
+@pytest.mark.skipif(not HAVE_LITERAL, reason="Litral not available")
+def test_literal_error():
+    with pytest.raises(WrongLiteralError) as exinfo:
+        parse_input(5, Literal[6])
+    assert exinfo.value.value == 5
+    assert exinfo.value.reference == [6,]
+    assert "5" in str(exinfo.value)
+
+    with pytest.raises(WrongLiteralError) as exinfo:
+        parse_input(5, Literal[6, Literal[7], 8])
+    assert exinfo.value.value == 5
+    assert exinfo.value.reference == [6, 7, 8]
+    assert "7" in str(exinfo.value)

@@ -128,6 +128,15 @@ If a given input can be coerced into more than one of the member of the union, t
     >>> validobj.parse_input([1,2,3], typing.Union[set, tuple])
     {1, 2, 3}
 
+Literals
+^^^^^^^^
+
+:py:class:`typing.Literal` is supported with recent enough versions of the typing module::
+
+    >>> validobj.parse_input(5, typing.Literal[1, 2, typing.Literal[5]])
+    5
+
+
 
 Any
 ^^^
