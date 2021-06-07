@@ -29,7 +29,7 @@ https://validobj.readthedocs.io/en/latest/
 ## Example
 
 
- 1. Define a using dataclasses
+ 1. Define a schema using dataclasses
 	```python
 	import dataclasses
 	import enum
