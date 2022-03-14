@@ -94,10 +94,10 @@ def test_good_inp():
     assert parse_input(good_inp, Db) == expected_res
 
 
-def test_bad_inp():
-    for k in bad_inp:
-        with pytest.raises(ValidationError):
-            parse_input(*k)
+@pytest.mark.parametrize(("value", "spec"), bad_inp)
+def test_bad_inp(value, spec):
+    with pytest.raises(ValidationError):
+        parse_input(value, spec)
 
 
 def test_not_supported():
@@ -149,6 +149,17 @@ def test_none():
     with pytest.raises(ValidationError):
         parse_input("Some value", None)
 
+
 @pytest.mark.skipif(not HAVE_LITERAL, reason="Literal not found")
 def test_literal():
     assert parse_input(5, Literal[5, Literal[1, 3]]) == 5
+
+
+def test_enum_by_value() -> None:
+    """Enums are built also from value."""
+    assert parse_input("small", MemOptions) == MemOptions.SMALL
+
+
+def test_enum_by_int_value() -> None:
+    """Enums are built also from value."""
+    assert parse_input(1, Attributes) == Attributes.READ
