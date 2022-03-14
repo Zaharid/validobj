@@ -176,12 +176,11 @@ def _parse_dataclass(value, spec):
 
 
 def _parse_single_enum(value, spec):
-    if not isinstance(value, str):
-        raise WrongTypeError(
-            f"Expecting value to be a string, not {_typename(type(value))!r}"
-        )
-    if not value in spec.__members__:
-        raise NotAnEnumItemError(value, spec)
+    if value not in spec.__members__:
+        try:
+            return spec(value)
+        except (ValueError, TypeError):
+            raise NotAnEnumItemError(value, spec)
     return spec.__members__[value]
 
 
