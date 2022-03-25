@@ -18,7 +18,6 @@ except ImportError:  # pragma: nocover
     HAVE_LITERAL = False
 else:
     HAVE_LITERAL = True
-from types import FunctionType
 from collections.abc import Mapping
 import dataclasses
 import enum
@@ -355,7 +354,7 @@ def parse_input(value: Any, spec: Type[T]) -> T:
         return _handle_typing_spec(value, spec)
 
     # Handle typing.NewType
-    if isinstance(spec, FunctionType) and hasattr(spec, '__supertype__'):
+    if hasattr(spec, '__supertype__'):
         # Don't use __name__ in the error because we want the input type
         tp = spec.__supertype__
     else:
