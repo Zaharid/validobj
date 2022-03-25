@@ -330,7 +330,7 @@ def parse_input(value: Any, spec: Type[T]) -> T:
     """
     if spec is dataclasses.MISSING or spec is Any:
         return value
-    # None is a special calse, as specified in
+    # None is a special case, as specified in
     # https://docs.python.org/3/library/typing.html#type-aliases
     if spec is None:
         return parse_input(value, type(None))
