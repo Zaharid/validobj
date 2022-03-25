@@ -18,6 +18,14 @@ except ImportError:  # pragma: nocover
     HAVE_LITERAL = False
 else:
     HAVE_LITERAL = True
+
+try:
+    from types import UnionType
+except ImportError: # pragma: nocover
+    HAVE_UNION_TYPE = False
+else:
+    HAVE_UNION_TYPE = True
+
 from collections.abc import Mapping
 import dataclasses
 import enum
@@ -219,6 +227,9 @@ def _parse_literal(value, references):
             return value
     raise WrongLiteralError(value, references)
 
+def _handle_union(value, args):
+    tp = _sane_typing_args(args)
+    return parse_input(value, tp)
 
 def _handle_typing_spec(value, spec):
     if not hasattr(spec, '__args__'):  # pragma: nocover
@@ -235,8 +246,7 @@ def _handle_typing_spec(value, spec):
     elif spec.__origin__ in (Mapping, dict):
         return _parse_typing_mapping(value, spec)
     elif spec.__origin__ is Union:
-        tp = _sane_typing_args(spec.__args__)
-        return parse_input(value, tp)
+        return _handle_union(value, spec.__args__)
     elif HAVE_LITERAL and spec.__origin__ is Literal:
         return _parse_literal(value, _reduce_literal_args(spec.__args__))
     else:
@@ -349,6 +359,9 @@ def parse_input(value: Any, spec: Type[T]) -> T:
         return _parse_enum(value, spec)
     if dataclasses.is_dataclass(spec):
         return _parse_dataclass(value, spec)
+
+    if HAVE_UNION_TYPE and isinstance(spec, UnionType):
+        return _handle_union(value, spec.__args__)
 
     if hasattr(spec, '__origin__'):
         return _handle_typing_spec(value, spec)

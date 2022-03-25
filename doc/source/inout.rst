@@ -128,6 +128,15 @@ If a given input can be coerced into more than one of the member of the union, t
     >>> validobj.parse_input([1,2,3], typing.Union[set, tuple])
     {1, 2, 3}
 
+From Python 3.10, union types can be specified using the ``X | Y`` syntax.
+
+.. doctest::
+    :pyversion: >= 3.10
+
+    >>> validobj.parse_input([1,2,3], tuple | set)
+    (1, 2, 3)
+
+
 Literals
 ^^^^^^^^
 

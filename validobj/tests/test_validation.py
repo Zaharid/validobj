@@ -9,11 +9,18 @@ except ImportError: # pragma: nocover
 else:
     HAVE_LITERAL = True
 
+try:
+    from types import UnionType
+except ImportError:
+    HAVE_UNION_TYPE = False
+else:
+    HAVE_UNION_TYPE = True
+
 import pytest
 from hypothesis import given
 from hypothesis.strategies import builds, register_type_strategy, booleans
 
-from validobj.validation import parse_input, ValidationError
+from validobj.validation import parse_input, ValidationError, UnionValidationError
 
 stralias = NewType('stralias', str)
 
@@ -152,3 +159,10 @@ def test_none():
 @pytest.mark.skipif(not HAVE_LITERAL, reason="Literal not found")
 def test_literal():
     assert parse_input(5, Literal[5, Literal[1, 3]]) == 5
+
+@pytest.mark.skipif(not HAVE_UNION_TYPE, reason="Union type not found")
+def test_union():
+    assert parse_input("READ", Attributes | MemOptions | None) is Attributes.READ
+    assert parse_input(None, Attributes | MemOptions | None) is None
+    with pytest.raises(UnionValidationError):
+        parse_input(1, Attributes | MemOptions)
