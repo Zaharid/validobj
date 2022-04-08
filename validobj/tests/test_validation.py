@@ -1,6 +1,7 @@
 import dataclasses
 import enum
 from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType
+import sys
 
 try:
     from typing import Literal
@@ -21,7 +22,7 @@ try:
 except ImportError:
     HAVE_TYPED_DICT = False
 else:
-    HAVE_TYPED_DICT = True
+    HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
 
 import pytest
 from hypothesis import given

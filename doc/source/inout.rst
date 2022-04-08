@@ -161,7 +161,8 @@ Any
 Typed mappings
 ^^^^^^^^^^^^^^
 
-:py:class:`typing.TypedDict` is supported, including with nesting of types.
+:py:class:`typing.TypedDict` is supported for Python versions older than 3.9,
+including with nesting of types.
 
 .. doctest::
     :pyversion: >= 3.8

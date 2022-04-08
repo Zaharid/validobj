@@ -11,6 +11,7 @@ The validation module implements the :py:func:`parse_input` function.
 
 """
 from typing import Set, Union, Any, Optional, TypeVar, Type
+import sys
 
 try:
     from typing import Literal
@@ -21,10 +22,10 @@ else:
 
 try:
     from typing import _TypedDictMeta
-except ImportError:
+except ImportError: # pragma: nocover
     HAVE_TYPED_DICT = False
 else:
-    HAVE_TYPED_DICT = True
+    HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
 
 try:
     from types import UnionType
