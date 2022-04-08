@@ -20,6 +20,13 @@ else:
     HAVE_LITERAL = True
 
 try:
+    from typing import _TypedDictMeta
+except ImportError:
+    HAVE_TYPED_DICT = False
+else:
+    HAVE_TYPED_DICT = True
+
+try:
     from types import UnionType
 except ImportError: # pragma: nocover
     HAVE_UNION_TYPE = False
@@ -180,6 +187,31 @@ def _parse_dataclass(value, spec):
                 wrong_field=k,
             ) from e
     return spec(**res)
+
+
+def _parse_typed_dict(value, spec):
+    if not isinstance(value, dict):
+        raise WrongTypeError(
+            f"Expecting value to be a dict, not {_typename(type(value))}"
+        )
+    _match_sets(
+        value.keys(),
+        spec.__required_keys__,
+        spec.__required_keys__ | spec.__optional_keys__,
+        header=f"Cannot process value into {_typename(spec)!r} because "
+        f"fields do not match.",
+    )
+    res = {}
+    for k, v in value.items():
+        try:
+            res[k] = parse_input(v, spec.__annotations__[k])
+        except ValidationError as e:
+            raise WrongFieldError(
+                f"Cannot process field {k!r} of value into the "
+                f"corresponding field of {_typename(spec)!r}",
+                wrong_field=k,
+            ) from e
+    return res
 
 
 def _parse_single_enum(value, spec):
@@ -362,6 +394,9 @@ def parse_input(value: Any, spec: Type[T]) -> T:
 
     if HAVE_UNION_TYPE and isinstance(spec, UnionType):
         return _handle_union(value, spec.__args__)
+
+    if HAVE_TYPED_DICT and isinstance(spec, _TypedDictMeta):
+        return _parse_typed_dict(value, spec)
 
     if hasattr(spec, '__origin__'):
         return _handle_typing_spec(value, spec)

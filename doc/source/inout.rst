@@ -161,8 +161,23 @@ Any
 Typed mappings
 ^^^^^^^^^^^^^^
 
+:py:class:`typing.TypedDict` is supported, including with nesting of types.
 
-The types of keys and values can be restricted:
+.. doctest::
+    :pyversion: >= 3.8
+
+    >>> class Config(typing.TypedDict):
+    ...     a: str
+    ...     b: typing.Optional[typing.List[int]]
+    ... 
+    >>> validobj.parse_input({"a": "Hello", "b": [1,2,3]}, Config)
+    {'a': 'Hello', 'b': [1, 2, 3]}
+    >>> validobj.parse_input({"a": "Hello", "b": [1,2,"three"]}, Config) #doctest: +SKIP
+    ...
+    WrongFieldError: Cannot process field 'b' of value into the corresponding field of 'Config'
+
+
+:py:class:`typing.Mapping` can be used to restrict types of keys and values, for arbitrary keys;
 
 .. doctest::
 
