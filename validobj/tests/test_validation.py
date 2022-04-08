@@ -24,6 +24,13 @@ except ImportError:
 else:
     HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
 
+try:
+    from typing import Annotated
+except ImportError: # pragma: nocover
+    HAVE_ANNOTATED = False
+else:
+    HAVE_ANNOTATED = True
+
 import pytest
 from hypothesis import given
 from hypothesis.strategies import builds, register_type_strategy, booleans
@@ -187,3 +194,11 @@ def test_typed_dict():
         parse_input("x", T)
     U = TypedDict("T", {"a": Union[str, int], "b": int}, total=False)
     assert parse_input({"a": 1}, U) == {"a": 1}
+
+@pytest.mark.skipif(not HAVE_ANNOTATED, reason="Annotated not found")
+def test_annotated():
+    T = Annotated[Union[Annotated[int, "bogus"], None], "bogus"]
+    assert parse_input(5, T) == 5
+    assert parse_input(None, T) is None
+    with pytest.raises(ValidationError):
+        parse_input("cinco", T)
