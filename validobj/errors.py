@@ -6,7 +6,7 @@ subclasses of :py:class:`ValidationError`.
 
 import difflib
 
-__all__ = (
+__all__ = [
     'ValidationError',
     'WrongTypeError',
     'WrongKeysError',
@@ -14,7 +14,7 @@ __all__ = (
     'WrongFieldError',
     'WrongListItemError',
     'UnionValidationError',
-)
+]
 
 
 def print_list(options):

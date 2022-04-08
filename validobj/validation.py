@@ -49,7 +49,9 @@ from validobj.errors import (
     WrongLiteralError,
 )
 
-__all__ = ('parse_input',)
+__all__ = [
+    'parse_input',
+]
 
 
 def _match_sets(
