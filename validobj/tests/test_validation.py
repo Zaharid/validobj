@@ -1,6 +1,7 @@
 import dataclasses
 import enum
 from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType
+import sys
 
 try:
     from typing import Literal
@@ -15,6 +16,13 @@ except ImportError:
     HAVE_UNION_TYPE = False
 else:
     HAVE_UNION_TYPE = True
+
+try:
+    from typing import TypedDict
+except ImportError:
+    HAVE_TYPED_DICT = False
+else:
+    HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
 
 import pytest
 from hypothesis import given
@@ -166,3 +174,16 @@ def test_union():
     assert parse_input(None, Attributes | MemOptions | None) is None
     with pytest.raises(UnionValidationError):
         parse_input(1, Attributes | MemOptions)
+
+@pytest.mark.skipif(not HAVE_TYPED_DICT, reason="Typed dict not found")
+def test_typed_dict():
+    T = TypedDict("T", {"a": Union[str, int], "b": int})
+    assert parse_input({"a": 1, "b": 1}, T) == {"a": 1, "b": 1}
+    with pytest.raises(ValidationError):
+        parse_input({"a": 1}, T)
+    with pytest.raises(ValidationError):
+        parse_input({"a": "uno", "b": "dos"}, T)
+    with pytest.raises(ValidationError):
+        parse_input("x", T)
+    U = TypedDict("T", {"a": Union[str, int], "b": int}, total=False)
+    assert parse_input({"a": 1}, U) == {"a": 1}
