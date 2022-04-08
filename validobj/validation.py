@@ -28,6 +28,13 @@ else:
     HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
 
 try:
+    from typing import _AnnotatedAlias
+except ImportError: # pragma: nocover
+    HAVE_ANNOTATED = False
+else:
+    HAVE_ANNOTATED = True
+
+try:
     from types import UnionType
 except ImportError: # pragma: nocover
     HAVE_UNION_TYPE = False
@@ -246,6 +253,10 @@ def _parse_enum(value, spec):
     return _parse_single_enum(value, spec)
 
 
+def _parse_annotated(value, spec):
+    return parse_input(value, spec.__origin__)
+
+
 def _reduce_literal_args(args):
     l = []
     for arg in args:
@@ -400,6 +411,9 @@ def parse_input(value: Any, spec: Type[T]) -> T:
 
     if HAVE_TYPED_DICT and isinstance(spec, _TypedDictMeta):
         return _parse_typed_dict(value, spec)
+
+    if HAVE_ANNOTATED and isinstance(spec, _AnnotatedAlias):
+        return _parse_annotated(value, spec)
 
     if hasattr(spec, '__origin__'):
         return _handle_typing_spec(value, spec)
