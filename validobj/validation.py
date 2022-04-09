@@ -25,7 +25,7 @@ try:
 except ImportError: # pragma: nocover
     HAVE_TYPED_DICT = False
 else:
-    HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
+    HAVE_TYPED_DICT = sys.version_info >= (3, 9)
 
 try:
     from typing import _AnnotatedAlias
@@ -33,6 +33,7 @@ except ImportError: # pragma: nocover
     HAVE_ANNOTATED = False
 else:
     HAVE_ANNOTATED = True
+    from validobj.custom import InputType, Validator
 
 try:
     from types import UnionType
@@ -254,6 +255,11 @@ def _parse_enum(value, spec):
 
 
 def _parse_annotated(value, spec):
+    meta = spec.__metadata__
+    if len(meta) == 2 and isinstance(meta[0], InputType) and isinstance(meta[1], Validator):
+        inp, func = meta
+        parsed = parse_input(value, inp.type)
+        return func(parsed)
     return parse_input(value, spec.__origin__)
 
 

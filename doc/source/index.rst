@@ -4,8 +4,8 @@ Welcome to Validobj's documentation!
 
 Validobj is a library that processes semistructured input coming from sources a
 JSON mapping or a YAML configuration file  into more structured Python objects.
-Currently it only has one API function, :py:func:`validobj.validation.parse_input`, but it
-can do quite a bit!
+The main API function, :py:func:`validobj.validation.parse_input`, takes care
+of that
 
 .. literalinclude:: ../examples/basic.py
 
@@ -15,7 +15,7 @@ and output <inout>`.
 
 Validobj aims at providing building blocks to construct the most human friendly
 error handling in town. Its exceptions provide lots of information on what went
-wrong as well as good error messages, which even contain suggestions on typos.
+wrong as well as good messages, which even contain suggestions on typos.
 
 .. doctest::
 
@@ -41,12 +41,17 @@ wrong as well as good error messages, which even contain suggestions on typos.
     ...
     WrongListItemError: Cannot process item 2 into 'DiskPermissions'.
 
+When more control is needed, Validobj allows :ref:`passing custom functions to
+handle transformations <custom>`.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    inout
    errors
+   custom
    examples
    apisrc/modules
 

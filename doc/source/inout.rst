@@ -109,7 +109,7 @@ made homogeneous:
 Unions
 ^^^^^^
 
-:py:class:`typing.Union` and :py:class:`typing.Optional` are supported:
+:py:data:`typing.Union` and :py:data:`typing.Optional` are supported:
 
 .. doctest::
 
@@ -140,17 +140,29 @@ From Python 3.10, union types can be specified using the ``X | Y`` syntax.
 Literals
 ^^^^^^^^
 
-:py:class:`typing.Literal` is supported with recent enough versions of the typing module::
+:py:data:`typing.Literal` is supported with recent enough versions of the typing module::
 
     >>> validobj.parse_input(5, typing.Literal[1, 2, typing.Literal[5]])
     5
 
 
+Annotaded
+^^^^^^^^^
+
+:py:data:`typing.Annotated` is used to enable :ref:`custom processing <custom>`
+of types. Other annotation metadata  is ignored.
+
+
+.. doctest::
+    :pyversion: >= 3.9
+
+    >>> validobj.parse_input(5, typing.Annotated[int, "bogus"])
+    5
 
 Any
 ^^^
 
-:py:class:`typing.Any` is a no-op:
+:py:data:`typing.Any` is a no-op:
 
 
 .. doctest::

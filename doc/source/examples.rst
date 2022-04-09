@@ -86,3 +86,55 @@ Which prints:
       - name
       - os
       - script_path
+
+JSON NaNs and Infinities
+------------------------
+
+The JSON specification does not allow for NaN or infinity floating point
+values, which is occasionally inconvenient. We might want to introduce the
+convention that the JSON strings ``"Infinity"``, ``"-Infinity"`` and ``"NaN"``,
+in addition to all integer and floating point values, should resolve to
+float values. A type annotated Python function that does that is
+
+.. doctest::
+
+   >>> from typing import Union, Literal
+   >>> def json_float(
+   ...     inp: Union[int, float, Literal["Infinity"], Literal["-Infinity"], Literal["NaN"]]
+   ... ) -> float:
+   ...     return float(inp)
+
+(since the three literal strings work with the built in ``float``).
+
+The :ref:`custom parsing <custom>` feature allows passing that function to
+
+.. doctest::
+
+    >>> from validobj.custom import Parser
+    >>> JSONFloat = Parser(json_float)
+
+This reads the function signature to construct a valid
+:py:class:`typing.Annotated` annotation. It then allows associating the input
+type of the function (the union) with its output type (``float``), and invokes
+it to go from one to the other at arbitrary nested levels. For example we might
+want to define an object allowing for infinities as
+
+.. doctest::
+
+    >>> from typing import List
+    >>> import dataclasses
+    >>> from validobj import parse_input, ValidationError
+    >>> @dataclasses.dataclass
+    ... class Bin:
+    ...     min_value: JSONFloat
+    ...     max_value: JSONFloat
+    ...     def __post_init__(self):
+    ...         if not self.min_value <= self.max_value:
+    ...             raise ValidationError("Expecting min_value <= max_value")
+    >>> Binning = List[Bin]
+
+    >>> parse_input(
+    ...     [{"min_value": "-Infinity", "max_value": 5}, {"min_value": 0, "max_value": 10}],
+    ...     Binning
+    ... )
+    [Bin(min_value=-inf, max_value=5.0), Bin(min_value=0.0, max_value=10.0)]
