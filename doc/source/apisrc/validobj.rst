@@ -1,16 +1,16 @@
 validobj package
 ================
 
-Submodules
-----------
+Module contents
+---------------
 
-validobj.errors module
-----------------------
-
-.. automodule:: validobj.errors
+.. automodule:: validobj
    :members:
    :undoc-members:
    :show-inheritance:
+
+Submodules
+----------
 
 validobj.validation module
 --------------------------
@@ -21,10 +21,19 @@ validobj.validation module
    :show-inheritance:
 
 
-Module contents
----------------
+validobj.errors module
+----------------------
 
-.. automodule:: validobj
+.. automodule:: validobj.errors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+validobj.custom module
+----------------------
+
+.. automodule:: validobj.custom
    :members:
    :undoc-members:
    :show-inheritance:

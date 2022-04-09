@@ -108,8 +108,11 @@ https://validobj.readthedocs.io/en/latest/
 	#
 	```
 
-The set of applied transformations is [described in the
-documentation](https://validobj.readthedocs.io/en/latest/inout.html)
+The set of [applied
+transformations](https://validobj.readthedocs.io/en/latest/inout.html) as well
+as the interface to [customise
+processing](https://validobj.readthedocs.io/en/latest/custom.html) are described
+in the [documentation](https://validobj.readthedocs.io/en/latest)
 
 
 

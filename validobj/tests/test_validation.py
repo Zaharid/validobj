@@ -12,17 +12,17 @@ else:
 
 try:
     from types import UnionType
-except ImportError:
+except ImportError:  # pragma: nocover
     HAVE_UNION_TYPE = False
 else:
     HAVE_UNION_TYPE = True
 
 try:
     from typing import TypedDict
-except ImportError:
+except ImportError: #pragma: nocover
     HAVE_TYPED_DICT = False
 else:
-    HAVE_TYPED_DICT = sys.version_info[:2] >= (3, 9)
+    HAVE_TYPED_DICT = sys.version_info >= (3, 9)
 
 try:
     from typing import Annotated
