@@ -90,17 +90,17 @@ def Parser(func: Callable):
 
         >>> import typing
         >>> import decimal
+        >>> from validobj import parse_input, ValidationError
+        >>> from validobj.custom import Parser
         >>> def to_decimal(inp: typing.Union[str, int, float]) -> decimal.Decimal:
         ...     try:
         ...         return decimal.Decimal(inp)
         ...     except decimal.InvalidOperation as e:
         ...         raise ValidationError("Invalid decimal") from e
         ...
-        >>> from validobj.custom import Parser
         >>> Decimal = Parser(to_decimal)
         >>> print(Decimal)
-        typing.Annotated[decimal.Decimal, InputType(typing.Union[str, int, float]), Validator(<function to_decimal at 0x7f5d077b55e0>)]
-        >>> from validobj import parse_input, ValidationError
+        typing.Annotated[decimal.Decimal, InputType(typing.Union[str, int, float]), Validator(<function to_decimal at ...>)]
         >>> parse_input(0.5, Decimal)
         Decimal('0.5')
     """

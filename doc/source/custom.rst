@@ -71,10 +71,6 @@ or enforced by Validobj, but might be useful for static type checkers.
     ...     return p
     ... 
     >>> UnitCirclePoint = Parser(in_unit_circle_point)
-    >>> def in_unit_circle_point(p: Point):
-    ...     if not p.x**2 + p.y**2 < 1:
-    ...         raise ValidationError("Point outside unit circle")
-    ...     return p
     >>> parse_input({"x": 0.4, "y": 0.2}, UnitCirclePoint)
     Point(x=0.4, y=0.2)
     >>> parse_input({"x": 0.4, "y": "ups"}, UnitCirclePoint) #doctest: +SKIP
