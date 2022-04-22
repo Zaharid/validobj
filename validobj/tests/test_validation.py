@@ -33,7 +33,7 @@ else:
 
 import pytest
 from hypothesis import given
-from hypothesis.strategies import builds, register_type_strategy, booleans
+from hypothesis.strategies import builds, register_type_strategy, booleans, dictionaries, text
 
 from validobj.validation import parse_input, ValidationError, UnionValidationError
 
@@ -135,8 +135,6 @@ def test_collections():
         parse_input("X", frozenset)
 
 
-register_type_strategy(Any, booleans())
-
 
 def invert_db(db):
     db = dataclasses.asdict(db)
@@ -158,7 +156,8 @@ def invert_db(db):
     return db
 
 
-dbstrat = builds(Db).map(invert_db)
+metadata_strat = dictionaries(text(), booleans())
+dbstrat = builds(Db, metadata=metadata_strat).map(invert_db)
 
 
 @given(dbstrat)
