@@ -160,10 +160,31 @@ def _parse_typing_mapping(value, spec):
     return res
 
 
-def _dataclass_required_allowed(cls):
+def _dataclasses_fields(class_or_instance):
+    """
+    A copy of dataclasses.fields that also returns InitVar fields.
+    """
+
+    # Might it be worth caching this, per class?
+    try:
+        fields = getattr(class_or_instance, dataclasses._FIELDS)
+    except AttributeError:
+        raise TypeError('must be called with a dataclass type or instance')
+
+    # Exclude pseudo-fields.  Note that fields is sorted by insertion
+    # order, so the order of the tuple is as the fields were defined.
+    return tuple(
+        f
+        for f in fields.values()
+        if f._field_type is dataclasses._FIELD
+        or f._field_type is dataclasses._FIELD_INITVAR
+    )
+
+
+def _dataclass_required_allowed(fields):
     allowed = set()
     required = set()
-    for field in dataclasses.fields(cls):
+    for field in fields:
         name = field.name
         allowed.add(name)
         if (
@@ -180,14 +201,19 @@ def _parse_dataclass(value, spec):
             f"Expecting value to be a dict, compatible with {_typename(spec)!r}, "
             f"not {_typename(type(value))!r}"
         )
+    fields = _dataclasses_fields(spec)
     _match_sets(
         value.keys(),
-        *_dataclass_required_allowed(spec),
+        *_dataclass_required_allowed(fields),
         header=f"Cannot process value into {_typename(spec)!r} because "
         f"fields do not match.",
     )
     res = {}
-    field_dict = {f.name: f.type for f in dataclasses.fields(spec)}
+    field_dict = {
+        # Look inside InitVar
+        f.name: f.type if not isinstance(f.type, dataclasses.InitVar) else f.type.type
+        for f in fields
+    }
     for k, v in value.items():
         try:
             res[k] = parse_input(v, field_dict[k])

@@ -70,6 +70,7 @@ class Db:
     rows: List[Row]
     size: MemOptions = MemOptions.SMALL
     attributes: Attributes = Attributes.READ | Attributes.WRITE
+    connection: dataclasses.InitVar[str] = "localhost"
 
 
 good_inp = {
@@ -153,6 +154,7 @@ def invert_db(db):
         for m in Attributes.__members__
         if Attributes.__members__[m] in db['attributes']
     )
+    db["connection"] = "connection"
     return db
 
 

@@ -252,7 +252,8 @@ Additionally lists of strings can be turned into instances of
 Dataclasses
 ^^^^^^^^^^^
 
-The :py:mod:`dataclasses` module supported and input is parsed based on the type annotations:
+The :py:mod:`dataclasses` module is supported and input is parsed based on the
+type annotations:
 
 .. doctest::
 
@@ -266,11 +267,13 @@ The :py:mod:`dataclasses` module supported and input is parsed based on the type
     ... class File:
     ...     location: str
     ...     meta: FileMeta = dataclasses.field(default_factory=FileMeta)
-    >>> validobj.parse_input({'location': 'https://example.com/file'}, File)
+    ...     storage_class: dataclasses.InitVar[str] = "local"
+    >>> validobj.parse_input({'location': 'https://example.com/file', 'storage_class': 'remote'}, File)
     File(location='https://example.com/file', meta=FileMeta(description='', keywords=[], author=''))
 
 Fields with defaults (or default factories) are inferred. Fields that are
-themselves dataclasses are processed recursively.
+themselves dataclasses are processed recursively. Init-only variables using
+:py:class:`dataclasses.InitVar` are supported, with the types checked.
 
 
 Rich tracebacks are produced in case of validation error:
