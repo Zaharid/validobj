@@ -70,7 +70,6 @@ Which prints:
 
 .. code-block::
 
-
     Problem processing key at line 2:
     Cannot process field 'stages' of value into the corresponding field of 'CIConf'
     Problem processing list item at line 6:
@@ -86,6 +85,8 @@ Which prints:
       - name
       - os
       - script_path
+
+
 
 JSON NaNs and Infinities
 ------------------------
