@@ -1,13 +1,6 @@
 import enum
 import dataclasses
-from typing import List, Mapping, Optional
-
-try:
-    from typing import Literal
-except ImportError:  # pragma: nocover
-    HAVE_LITERAL = False
-else:
-    HAVE_LITERAL = True
+from typing import List, Mapping, Optional, Literal
 
 import pytest
 
@@ -92,7 +85,6 @@ def test_correct_items():
     assert exinfo.value.wrong_field == 'a'
 
 
-@pytest.mark.skipif(not HAVE_LITERAL, reason="Litral not available")
 def test_literal_error():
     with pytest.raises(WrongLiteralError) as exinfo:
         parse_input(5, Literal[6])

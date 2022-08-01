@@ -23,7 +23,7 @@ places the emphasis on:
 Validobj requires a moder Python version and has no other dependencies. It
 progressively supports typing features as they are implemented in the standard
 library and language: A limited subset of the parsing facilities work with
-python 3.7. The [custom validation
+Python 3.8, which is the minimum version. The [custom validation
 module](https://validobj.readthedocs.io/en/latest/custom.html) requires at least
 Python 3.9.
 

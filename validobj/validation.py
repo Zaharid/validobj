@@ -10,15 +10,8 @@ The validation module implements the :py:func:`parse_input` function.
 
 
 """
-from typing import Set, Union, Any, Optional, TypeVar, Type
+from typing import Set, Union, Any, Optional, TypeVar, Type, Literal
 import sys
-
-try:
-    from typing import Literal
-except ImportError:  # pragma: nocover
-    HAVE_LITERAL = False
-else:
-    HAVE_LITERAL = True
 
 try:
     from typing import _TypedDictMeta
@@ -325,7 +318,7 @@ def _handle_typing_spec(value, spec):
         return _parse_typing_mapping(value, spec)
     elif spec.__origin__ is Union:
         return _handle_union(value, spec.__args__)
-    elif HAVE_LITERAL and spec.__origin__ is Literal:
+    elif spec.__origin__ is Literal:
         return _parse_literal(value, _reduce_literal_args(spec.__args__))
     else:
         raise NotImplementedError(f"Validation not implemented for {spec}")

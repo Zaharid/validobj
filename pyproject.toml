@@ -9,6 +9,7 @@ author-email = "zaharid@protonmail.com"
 home-page = "https://github.com/Zaharid/validobj"
 classifiers = ["License :: OSI Approved :: MIT License"]
 description-file="README.md"
+requires-python = ">=3.8"
 
 [tool.flit.metadata.requires-extra]
 test = [

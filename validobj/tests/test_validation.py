@@ -1,14 +1,7 @@
 import dataclasses
 import enum
-from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType
+from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType, Literal
 import sys
-
-try:
-    from typing import Literal
-except ImportError: # pragma: nocover
-    HAVE_LITERAL = False
-else:
-    HAVE_LITERAL = True
 
 try:
     from types import UnionType
@@ -172,7 +165,6 @@ def test_none():
     with pytest.raises(ValidationError):
         parse_input("Some value", None)
 
-@pytest.mark.skipif(not HAVE_LITERAL, reason="Literal not found")
 def test_literal():
     assert parse_input(5, Literal[5, Literal[1, 3]]) == 5
 
