@@ -14,7 +14,8 @@ Defining custom parsers
 Validobj provides a mechanism to allow supplementing the predefined processing
 logic. It consist on annotating a type with a function to be invoked to process
 the input. It uses :py:class:`typing.Annotated` under the hood, so the
-resulting annotations might be processed by static type checkers.
+resulting annotations might be processed by static type checkers. Because of
+that, it works only with Python 3.9 onwards.
 
 A simple way to use the functionality is as follows
 

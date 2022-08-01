@@ -1,4 +1,5 @@
 """Tools for :ref:`custom validation <custom>` of types.
+Works with Python 3.9 only.
 
 .. testsetup::
 
