@@ -20,7 +20,7 @@ places the emphasis on:
 	the [typing](https://docs.python.org/3/library/typing.html) module.
   - Simplicity of implementation (rather than full generality).
 
-Validobj requires a moder Python version and has no other dependencies. It
+Validobj requires a modern Python version and has no other dependencies. It
 progressively supports typing features as they are implemented in the standard
 library and language: A limited subset of the parsing facilities work with
 Python 3.8, which is the minimum version. The [custom validation
