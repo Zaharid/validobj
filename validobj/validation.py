@@ -255,8 +255,7 @@ def _parse_single_enum(value, spec):
 
 
 def _parse_list_enum(value, spec):
-    # This is a hidden function to create an enum composition with no members
-    res = spec._create_pseudo_member_(0)
+    res = spec(0)
     for i, item in enumerate(value):
         try:
             res |= _parse_single_enum(item, spec)
