@@ -49,6 +49,8 @@ Then the usage is:
     WrongFieldError: Insufficient funds
 
 
+.. _yamlexample:
+
 YAML line numbers
 -----------------
 
@@ -101,7 +103,7 @@ float values. A type annotated Python function that does that is
 
    >>> from typing import Union, Literal
    >>> def json_float(
-   ...     inp: Union[int, float, Literal["Infinity"], Literal["-Infinity"], Literal["NaN"]]
+   ...     inp: Union[int, float, Literal["Infinity", "-Infinity", "NaN"]]
    ... ) -> float:
    ...     return float(inp)
 

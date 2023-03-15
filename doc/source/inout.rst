@@ -11,9 +11,9 @@ Input and output
 
 
 
-:py:func:`validobj.validation.parse_input` takes an input to be processed and
-andoutput specification. The useful values for these options and the
-transformations that result are described below.
+:py:func:`validobj.validation.parse_input` takes an input raw object, to be
+processed, and an output type specification specification to process the object
+into.
 
 Supported input
 ---------------
@@ -29,13 +29,14 @@ Validobj is tested for input that can be processed from JSON. This includes:
 
 Other "scalar" types, such as datetimes processed from YAML should work fine.
 However these have no tests and no effort is made to avoid corner cases for
-more general inputs.
+more general inputs. Users can add :ref:`customizations <custom>` for these as
+appropriate for their application.
 
 Supported output
 ----------------
 
-The above is concerted into a wider set of Python objects with additional
-restrictions on the type, supported by the typing module.
+The input is coerced into a wider set of Python objects, as specified by the
+target specification.
 
 Simple verbatim input
 ^^^^^^^^^^^^^^^^^^^^^
@@ -44,7 +45,7 @@ All of the above input is supported verbatim
 
 .. doctest::
 
-    >>> validobj.parse_input({'a': 4, 'b': [1,2,"tres", None]}, dict)
+    >>> validobj.parse_input({'a': 4, 'b': [1, 2, "tres", None]}, dict)
     {'a': 4, 'b': [1, 2, 'tres', None]}
 
 Following :py:mod:`typing`, ``type(None)`` can be simply written as ``None``.
@@ -248,6 +249,9 @@ Additionally lists of strings can be turned into instances of
     <Permissions.EXECUTE|READ: 5>
     >>> validobj.parse_input([], Permissions)
     <Permissions.0: 0>
+
+Note that enums are matched by name rather than by value. This allows for more
+natural support of ``enum.auto`` and ``enum.Flag``.
 
 Dataclasses
 ^^^^^^^^^^^

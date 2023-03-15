@@ -9,7 +9,8 @@ Error handling
 
 Validobj aims to be good at providing good error messages by default, and
 enough metadata so that errors can be repurposed or improved. That metadata is
-enough to for example attach YAML line numbers to the sources of error.
+enough to for example :ref:`attach YAML line numbers to the sources of error
+<yamlexample>`.
 
 Generic errors
 --------------
