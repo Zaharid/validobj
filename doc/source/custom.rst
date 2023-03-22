@@ -84,11 +84,9 @@ or enforced by Validobj, but might be useful for static type checkers.
     ValidationError: Point outside unit circle
 
 
+:py:func:`validobj.custom.Parser` 
 While the result of :py:func:`validobj.custom.Parser` is an annotation
-compatible with static type checkers, they might dislike the fact that it is
-generated dynamically. If that is an important use case, the workaround is to
-define the type annotation explicitly manually.
-:py:func:`validobj.custom.Parser` returns::
+compatible with static type checkers. Specifically::
 
     typing.Annotated[
         <return type>,

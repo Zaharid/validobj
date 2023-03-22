@@ -8,7 +8,7 @@ Works with Python 3.9 only.
     from validobj.custom import Parser
 
 """
-from typing import Annotated, Any, Type, Callable
+from typing import Annotated, Any, Type, Callable, TypeVar
 import functools
 import inspect
 
@@ -53,7 +53,9 @@ class Validator:
         return f'{self.__class__.__name__}({repr(self.func)})'
 
 
-def Parser(func: Callable):
+T = TypeVar("T")
+
+def Parser(func: Callable[[Any], T]) -> Type[T]:
     """
     Read the type annotations of ``func`` and return a
     :py:class:`typing.Annotated` with the function's return type as the set
@@ -75,11 +77,6 @@ def Parser(func: Callable):
         :py:class:`InputType` with the type annotation of the first parameter and
         :py:class:`Validator` with the function itself.
 
-    Notes
-    -----
-    While the returned annotation is compatible with static type checker, the
-    runtime call to this function to produce it is not. Write the
-    :py:data:`typing.Annotated` manually if that is important.
 
     Examples
     --------
