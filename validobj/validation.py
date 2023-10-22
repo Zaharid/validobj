@@ -29,6 +29,13 @@ else:
     from validobj.custom import InputType, Validator
 
 try:
+    from typing import TypeAliasType
+except ImportError:  # pragma: nocover
+    HAVE_TYPE_ALIAS = False
+else:
+    HAVE_TYPE_ALIAS = True
+
+try:
     from types import UnionType
 except ImportError: # pragma: nocover
     HAVE_UNION_TYPE = False
@@ -404,6 +411,8 @@ def parse_input(value: Any, spec: Type[T]) -> T:
     # https://docs.python.org/3/library/typing.html#type-aliases
     if spec is None:
         return parse_input(value, type(None))
+    if HAVE_TYPE_ALIAS and isinstance(spec, TypeAliasType):
+        return parse_input(value, spec.__value__)
     if isinstance(spec, tuple):
         # Remove one level of exceptions
         if len(spec) == 1:

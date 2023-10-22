@@ -171,10 +171,25 @@ Any
     >>> validobj.parse_input('Hello', typing.Any)
     'Hello'
 
+Type aliases
+^^^^^^^^^^^^
+
+Types can be defined as :py:class:`typing.TypeAliasType`, using the :code:`type`
+syntax in Python 3.12 onwards:
+
+.. doctest::
+   :pyversion: >= 3.12
+
+    >>> type MyType = str | tuple[str, str]
+    >>> validobj.parse_input(["hi", "there"], MyType)
+    ('hi', 'there')
+
+
+
 Typed mappings
 ^^^^^^^^^^^^^^
 
-:py:class:`typing.TypedDict` is supported for Python versions older than 3.9,
+:py:class:`typing.TypedDict` is supported for Python versions newer than 3.9,
 including with nesting of types.
 
 .. doctest::
@@ -237,6 +252,7 @@ Additionally lists of strings can be turned into instances of
 :py:class:`enum.Flag`:
 
 .. doctest::
+    :pyversion: <= 3.10
 
     >>> class Permissions(enum.Flag):
     ...     READ = enum.auto()
