@@ -20,4 +20,5 @@ test = [
 doc = [
     'sphinx',
     'ruamel.yaml',
+    'sphinx_rtd_theme'
 ]
