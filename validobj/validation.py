@@ -168,7 +168,8 @@ def _dataclasses_fields(class_or_instance):
     # Might it be worth caching this, per class?
     try:
         fields = getattr(class_or_instance, dataclasses._FIELDS)
-    except AttributeError:
+    # We should not be calling this function with anything other than dataclasses.
+    except AttributeError: # pragma: nocover
         raise TypeError('must be called with a dataclass type or instance')
 
     # Exclude pseudo-fields.  Note that fields is sorted by insertion
