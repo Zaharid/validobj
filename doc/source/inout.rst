@@ -184,6 +184,18 @@ syntax in Python 3.12 onwards:
     >>> validobj.parse_input(["hi", "there"], MyType)
     ('hi', 'there')
 
+NewType
+^^^^^^^
+
+:py:class:`typing.NewType` works the same as if the type it wraps was given as
+input:
+
+.. doctest::
+
+   >>> MyNewType = typing.NewType("MyNewType", typing.Literal[5, 6])
+   >>> validobj.parse_input(5, MyNewType)
+   5
+
 
 
 Typed mappings
