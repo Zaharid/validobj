@@ -12,21 +12,26 @@ else:
 
 try:
     from typing import TypedDict
-except ImportError: #pragma: nocover
+except ImportError:  # pragma: nocover
     HAVE_TYPED_DICT = False
 else:
     HAVE_TYPED_DICT = sys.version_info >= (3, 9)
 
 try:
     from typing import Annotated
-except ImportError: # pragma: nocover
+except ImportError:  # pragma: nocover
     HAVE_ANNOTATED = False
 else:
     HAVE_ANNOTATED = True
 
 import pytest
 from hypothesis import given
-from hypothesis.strategies import builds, register_type_strategy, booleans, dictionaries, text
+from hypothesis.strategies import (
+    builds,
+    booleans,
+    dictionaries,
+    text,
+)
 
 from validobj.validation import parse_input, ValidationError, UnionValidationError
 
@@ -129,7 +134,6 @@ def test_collections():
         parse_input("X", frozenset)
 
 
-
 def invert_db(db):
     db = dataclasses.asdict(db)
     db['flags'] = list(map(dataclasses.asdict, db['flags']))
@@ -165,8 +169,10 @@ def test_none():
     with pytest.raises(ValidationError):
         parse_input("Some value", None)
 
+
 def test_literal():
     assert parse_input(5, Literal[5, Literal[1, 3]]) == 5
+
 
 def test_newtype():
     Base = Union[str, Literal[5]]
@@ -174,12 +180,14 @@ def test_newtype():
     v = 5
     assert parse_input(v, Derived) == 5
 
+
 @pytest.mark.skipif(not HAVE_UNION_TYPE, reason="Union type not found")
 def test_union():
     assert parse_input("READ", Attributes | MemOptions | None) is Attributes.READ
     assert parse_input(None, Attributes | MemOptions | None) is None
     with pytest.raises(UnionValidationError):
         parse_input(1, Attributes | MemOptions)
+
 
 @pytest.mark.skipif(not HAVE_TYPED_DICT, reason="Typed dict not found")
 def test_typed_dict():
@@ -193,6 +201,7 @@ def test_typed_dict():
         parse_input("x", T)
     U = TypedDict("T", {"a": Union[str, int], "b": int}, total=False)
     assert parse_input({"a": 1}, U) == {"a": 1}
+
 
 @pytest.mark.skipif(not HAVE_ANNOTATED, reason="Annotated not found")
 def test_annotated():
