@@ -455,13 +455,11 @@ def parse_input(value: Any, spec: Type[T]) -> T:
     # Handle typing.NewType
     if hasattr(spec, '__supertype__'):
         # Don't use __name__ in the error because we want the input type
-        tp = spec.__supertype__
-    else:
-        tp = spec
+        return parse_input(value, spec.__supertype__)
 
-    if isinstance(value, tp):
+    if isinstance(value, spec):
         return value
     else:
         raise WrongTypeError(
-            f"Expecting value of type {_typename(tp)!r}, not {_typename(type(value))}."
+            f"Expecting value of type {_typename(spec)!r}, not {_typename(type(value))}."
         )

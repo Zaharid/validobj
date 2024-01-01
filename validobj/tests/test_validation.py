@@ -168,6 +168,12 @@ def test_none():
 def test_literal():
     assert parse_input(5, Literal[5, Literal[1, 3]]) == 5
 
+def test_newtype():
+    Base = Union[str, Literal[5]]
+    Derived = NewType("Derived", Base)
+    v = 5
+    assert parse_input(v, Derived) == 5
+
 @pytest.mark.skipif(not HAVE_UNION_TYPE, reason="Union type not found")
 def test_union():
     assert parse_input("READ", Attributes | MemOptions | None) is Attributes.READ
