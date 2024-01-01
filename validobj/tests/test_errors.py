@@ -1,6 +1,6 @@
 import enum
 import dataclasses
-from typing import List, Mapping, Optional, Literal
+from typing import List, Mapping, Optional, Literal, NamedTuple
 
 import pytest
 
@@ -25,6 +25,12 @@ class Fieldset:
 class E(enum.Enum):
     FIELD1 = 'field1'
     FIELD2 = 'field2'
+
+
+class X(NamedTuple):
+    a: int
+    b: str = "hello"
+    c: Literal[5, 10] = 10
 
 
 def test_alternative_display():
@@ -97,3 +103,9 @@ def test_literal_error():
     assert exinfo.value.value == 5
     assert exinfo.value.reference == [6, 7, 8]
     assert "7" in str(exinfo.value)
+
+
+def test_namedtuple_error():
+    with pytest.raises(WrongListItemError) as exinfo:
+        parse_input([1, 1], X)
+    assert exinfo.value.wrong_index == 1

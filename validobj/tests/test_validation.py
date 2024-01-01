@@ -1,6 +1,18 @@
 import dataclasses
 import enum
-from typing import Tuple, Set, List, Mapping, Any, Union, Callable, NewType, Literal
+from collections import namedtuple
+from typing import (
+    Tuple,
+    Set,
+    List,
+    Mapping,
+    Any,
+    Union,
+    Callable,
+    NewType,
+    Literal,
+    NamedTuple,
+)
 import sys
 
 try:
@@ -201,6 +213,32 @@ def test_typed_dict():
         parse_input("x", T)
     U = TypedDict("T", {"a": Union[str, int], "b": int}, total=False)
     assert parse_input({"a": 1}, U) == {"a": 1}
+
+
+def test_namedtuple():
+    class X(NamedTuple):
+        a: int
+        b: str = "hello"
+        c: Literal[5, 10] = 10
+
+    Y = namedtuple("Y", ("a", "b", "c"), defaults=(10,))
+
+    assert parse_input([1], X) == (1, "hello", 10)
+    assert parse_input([3, "cuatro", 5], X) == (3, "cuatro", 5)
+    assert parse_input(["Hello", 1 , {"dos"}], Y) == Y("Hello", 1, {"dos"})
+
+    with pytest.raises(ValidationError):
+        parse_input("xx", X)
+
+    with pytest.raises(ValidationError):
+        parse_input([], X)
+
+    with pytest.raises(ValidationError):
+        parse_input(["xx"], X)
+
+    with pytest.raises(ValidationError):
+        parse_input(["xx"]*4, Y)
+
 
 
 @pytest.mark.skipif(not HAVE_ANNOTATED, reason="Annotated not found")

@@ -147,7 +147,7 @@ Literals
     5
 
 
-Annotaded
+Annotated
 ^^^^^^^^^
 
 :py:data:`typing.Annotated` is used to enable :ref:`custom processing <custom>`
@@ -234,6 +234,29 @@ including with nesting of types.
     Traceback (most recent call last):
     ...
     validobj.errors.WrongFieldError: Cannot process value for key 'quantity'
+
+NamedTuple
+^^^^^^^^^^
+
+:py:class:`typing.NamedTuple` (as well as the factory
+:py:func:`collections.namedtuple`) is supported, including annotations and
+default elements. The input to a tuple should be a list rather than a dict.
+
+.. doctest::
+
+    >>> import typing
+    >>> class Record(typing.NamedTuple):
+    ...     uid: int
+    ...     name: str
+    ...     address: typing.Optional[str] = None
+    >>> validobj.parse_input([1, "Zah"], Record)
+    Record(uid=1, name='Zah', address=None)
+    >>> validobj.parse_input([1, "Zah", {"Address"}], Record)
+    Traceback (most recent call last):
+    ...
+    WrongListItemError: Cannot process list item 3 into the field 'address' of 'Record'
+
+
 
 Enums
 ^^^^^

@@ -252,6 +252,45 @@ def _parse_typed_dict(value, spec):
     return res
 
 
+def _parse_namedtuple(value, spec):
+    if not isinstance(value, list):
+        raise WrongTypeError(
+            f"Expecting value to be a list, not {_typename(type(value))}"
+        )
+
+
+    if len(value) > len(spec._fields):
+        raise ValidationError(
+            f"Expecting value of length at most {len(spec._fields)}, not {len(value)}"
+        )
+
+    required = set(spec._fields) - spec._field_defaults.keys()
+    field_inputs = dict(zip(spec._fields, value))
+
+    _match_sets(
+        field_inputs.keys(),
+        required,
+        spec._fields,
+        header=f"Cannot process value into {_typename(spec)!r} because "
+        f"insufficient items are provided.",
+    )
+
+    res = {}
+    for i, (k, v) in enumerate(field_inputs.items()):
+        if k in spec.__annotations__:
+            try:
+                res[k] = parse_input(v, spec.__annotations__[k])
+            except ValidationError as e:
+                raise WrongListItemError(
+                    f"Cannot process list item {i+1} into the field {k!r} of {_typename(spec)!r}",
+                    wrong_index=i,
+                ) from e
+        else:
+            res[k] = v
+
+    return spec(**res)
+
+
 def _parse_single_enum(value, spec):
     if not isinstance(value, str):
         raise WrongTypeError(
@@ -432,11 +471,17 @@ def parse_input(value: Any, spec: Type[T]) -> T:
         raise UnionValidationError(
             f"No match for any possible type:\n{all_errors}", causes=causes
         )
+
     if spec in {tuple, set, frozenset}:
         return _parse_std_list_collection(value, spec)
 
+    # Namedtuple
+    if isinstance(spec, type) and issubclass(spec, tuple) and hasattr(spec, '_fields'):
+        return _parse_namedtuple(value, spec)
+
     if isinstance(spec, type) and issubclass(spec, enum.Enum):
         return _parse_enum(value, spec)
+
     if dataclasses.is_dataclass(spec):
         return _parse_dataclass(value, spec)
 
