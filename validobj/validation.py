@@ -275,7 +275,12 @@ def _parse_namedtuple(value, spec):
         f"insufficient items are provided.",
     )
 
+    # Python 3.9: collections.namedtuple does not have __annotations__.
+    if not hasattr(spec, '__annotations__'):
+        return spec(**field_inputs)
+
     res = {}
+
     for i, (k, v) in enumerate(field_inputs.items()):
         if k in spec.__annotations__:
             try:
