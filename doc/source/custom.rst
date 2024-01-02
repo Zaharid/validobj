@@ -12,20 +12,58 @@ Defining custom parsers
 
 
 Validobj provides a mechanism to allow supplementing the predefined processing
-logic. It consist on annotating a type with a function to be invoked to process
-the input. It uses :py:class:`typing.Annotated` under the hood, so the
-resulting annotations might be processed by static type checkers. Because of
-that, it works only with Python 3.9 onwards.
+logic, by annotating types with functions that are invoked to validate the input.
 
-A simple way to use the functionality is as follows
+.. note::
 
-1. Define a function with one input with the processing logic.
-2. Add type annotations to the input parameter and return type.
-3. Wrap the function with :py:func:`validobj.custom.Parser` to create a type annotation.
-4. Use the type annotation with Validobj.
+    The custom module :py:class:`typing.Annotated` under the hood, so the
+    resulting annotations might be processed by static type checkers. Because of
+    that, it works only with Python 3.9 onwards.
+
+Custom parsers are created by wrapping a properly annotated validation function with
+:py:func:`validobj.custom.Parser`:
 
 
-For example
+1. Define a function with one input with the processing logic. For example::
+
+        import typing
+        import decimal
+
+        from validobj import parse_input, ValidationError
+
+        def to_decimal(inp):
+            try:
+                return decimal.Decimal(inp)
+            except decimal.InvalidOperation as e:
+                raise ValidationError("Invalid decimal") from e
+
+ The custom function should raise an instance of
+ :py:class:`validobj.errors.ValidationError` to indicate validation failure.
+ Other exceptions will be treated as programming errors.
+
+2. Add type annotations to the input parameter and return type::
+
+        def to_decimal(inp: str|float]) -> decimal.Decimal:
+            ...
+
+ The Validobj :ref:`logic <inout>` is used to cast the input into the type
+ annotated in the input parameter. The custom function will only be called if
+ the cast succeeds. The return annotation of the custom function is not checked
+ or enforced by Validobj, but might be useful for static type checkers.
+
+3. Wrap the function with :py:func:`validobj.custom.Parser` to create a type annotation::
+
+        MyDecimal = Parser(to_decimal)
+
+ ``MyDecimal`` can be used whenever we want to use Validobj obtain a decimal from a string or a number.
+
+4. Use the type annotation with Validobj::
+
+        >>> parse_input(0.5, MyDecimal)
+        Decimal('0.5')
+
+
+The validators can also be create as closures:
 
 .. doctest::
     :pyversion: >= 3.9
@@ -47,15 +85,10 @@ For example
     ...
     ValidationError: Expecting 0 <= n < 10, but n=-0.1
 
-The custom function should raise an instance of
-:py:class:`validobj.errors.ValidationError` to indicate validation failure.
-Other exceptions will be treated as programming errors.
 
-The Validobj :ref:`logic <inout>` is used to cast the input into the type
-annotated in the input parameter. The custom function will only be called if
-the cast succeeds. The return annotation of the custom function is not checked
-or enforced by Validobj, but might be useful for static type checkers.
-
+The custom logic can be used to add restrictions on the input to some existing
+type, while taking advantage of the fact that the input is already processed
+into that type.
 
 .. doctest::
     :pyversion: >= 3.9
