@@ -45,6 +45,15 @@ When more control is needed, Validobj allows :ref:`passing custom functions to
 handle transformations <custom>`.
 
 
+A limited subset of the parsing facilities work with
+Python 3.8, which is the minimum version. The custom validation
+module requires at least Python 3.9.
+
+The `superseded <https://peps.python.org/pep-0649/>`_ functionality in `PEP 563 –
+Postponed Evaluation of Annotations <https://peps.python.org/pep-0563/>`_ is not
+supported.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
