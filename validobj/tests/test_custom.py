@@ -1,6 +1,6 @@
 import pytest
 import dataclasses
-from typing import Any
+from typing import Any, TypedDict
 
 try:
     from validobj.custom import Parser, Validator, InputType
@@ -13,7 +13,7 @@ from validobj import parse_input, ValidationError
 
 
 @pytest.mark.skipif(not HAVE_CUSTOM, reason="Custom type not found")
-def test_custom():
+def test_custom_dataclass():
     def my_float(inp: str) -> float:
         return float(inp) + 1
 
@@ -24,6 +24,23 @@ def test_custom():
 
     @dataclasses.dataclass
     class Container:
+        value: MyFloat
+
+    assert parse_input({"value": "5"}, Container) == Container(value=6)
+    with pytest.raises(ValidationError):
+        parse_input({"value": 5}, Container)
+
+@pytest.mark.skipif(not HAVE_CUSTOM, reason="Custom type not found")
+def test_custom_typeddict():
+    def my_float(inp: str) -> float:
+        return float(inp) + 1
+
+    MyFloat = Parser(my_float)
+    assert MyFloat.__origin__ is float
+    assert isinstance(MyFloat.__metadata__[0], InputType)
+    assert isinstance(MyFloat.__metadata__[1], Validator)
+
+    class Container(TypedDict):
         value: MyFloat
 
     assert parse_input({"value": "5"}, Container) == Container(value=6)

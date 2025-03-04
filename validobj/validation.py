@@ -10,7 +10,8 @@ The validation module implements the :py:func:`parse_input` function.
 
 
 """
-from typing import Set, Union, Any, Optional, TypeVar, Type, Literal
+
+from typing import Set, Union, Any, Optional, TypeVar, Type, Literal, get_type_hints
 import sys
 
 try:
@@ -209,10 +210,18 @@ def _parse_dataclass(value, spec):
         header=f"Cannot process value into {_typename(spec)!r} because "
         f"fields do not match.",
     )
+
+    # Use this to resolve forward references.
+    annotations = get_type_hints(spec, include_extras=True)
+
     res = {}
     field_dict = {
         # Look inside InitVar
-        f.name: f.type if not isinstance(f.type, dataclasses.InitVar) else f.type.type
+        f.name: (
+            annotations[f.name]
+            if not isinstance(f.type, dataclasses.InitVar)
+            else annotations[f.name].type
+        )
         for f in fields
     }
     for k, v in value.items():
@@ -239,10 +248,12 @@ def _parse_typed_dict(value, spec):
         header=f"Cannot process value into {_typename(spec)!r} because "
         f"fields do not match.",
     )
+    # Resolve forward references.
+    annotations = get_type_hints(spec, include_extras=True)
     res = {}
     for k, v in value.items():
         try:
-            res[k] = parse_input(v, spec.__annotations__[k])
+            res[k] = parse_input(v, annotations[k])
         except ValidationError as e:
             raise WrongFieldError(
                 f"Cannot process field {k!r} of value into the "
@@ -281,10 +292,12 @@ def _parse_namedtuple(value, spec):
 
     res = {}
 
+    annotations = get_type_hints(spec, include_extras=True)
+
     for i, (k, v) in enumerate(field_inputs.items()):
-        if k in spec.__annotations__:
+        if k in annotations:
             try:
-                res[k] = parse_input(v, spec.__annotations__[k])
+                res[k] = parse_input(v, annotations[k])
             except ValidationError as e:
                 raise WrongListItemError(
                     f"Cannot process list item {i+1} into the field {k!r} of {_typename(spec)!r}",
