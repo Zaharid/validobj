@@ -477,6 +477,12 @@ def parse_input(value: Any, spec: Type[T]) -> T:
             f"No match for any possible type:\n{all_errors}", causes=causes
         )
 
+    if spec is float and isinstance(value, int):
+        return float(value)
+
+    if spec is complex and isinstance(value, (int, float)):
+        return complex(value)
+
     if spec in {tuple, set, frozenset}:
         return _parse_std_list_collection(value, spec)
 

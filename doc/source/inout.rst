@@ -27,7 +27,8 @@ Validobj is tested for input that can be processed from JSON. This includes:
 * Lists
 * Mappings with string keys (although in practice any hashable key should work)
 
-Other "scalar" types, such as datetimes processed from YAML should work fine.
+Other "scalar" types, such as datetimes processed from YAML should work fine
+(an ``isinstance`` check is performed as a last resort).
 However these have no tests and no effort is made to avoid corner cases for
 more general inputs. Users can add :ref:`customizations <custom>` for these as
 appropriate for their application.
@@ -53,6 +54,14 @@ Following :py:mod:`typing`, ``type(None)`` can be simply written as ``None``.
 .. doctest::
 
     >>> validobj.parse_input(None, None)
+
+Also following typing conventions, ``int`` inputs are allowed as floats, but
+these will be be cast to ``float``:
+
+.. doctest::
+
+    >>> validobj.parse_input(1, float)
+    1.0
 
 Collections
 ^^^^^^^^^^^

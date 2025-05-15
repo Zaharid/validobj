@@ -248,3 +248,25 @@ def test_annotated():
     assert parse_input(None, T) is None
     with pytest.raises(ValidationError):
         parse_input("cinco", T)
+
+def test_number_casts():
+    float4 = parse_input(4, float)
+    assert isinstance(float4, float)
+    assert float4 == 4.
+
+    complex4 = parse_input(4, complex)
+    assert isinstance(complex4, complex)
+    assert complex4 == 4.
+
+    complex45 = parse_input(4.5, complex)
+    assert isinstance(complex45, complex)
+    assert complex45 == 4.5
+
+    with pytest.raises(ValidationError):
+        parse_input(4.5, int)
+
+    with pytest.raises(ValidationError):
+        parse_input(4.+0j, int)
+
+    with pytest.raises(ValidationError):
+        parse_input(4.+0j, float)
