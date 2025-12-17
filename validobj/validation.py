@@ -209,10 +209,13 @@ def _parse_dataclass(value, spec):
         header=f"Cannot process value into {_typename(spec)!r} because "
         f"fields do not match.",
     )
+    # Note: We don't use field.type because of https://github.com/python/cpython/issues/137891
+    types = spec.__annotations__
+
     res = {}
     field_dict = {
         # Look inside InitVar
-        f.name: f.type if not isinstance(f.type, dataclasses.InitVar) else f.type.type
+        f.name: types[f.name] if not isinstance(f.type, dataclasses.InitVar) else f.type.type
         for f in fields
     }
     for k, v in value.items():
