@@ -181,6 +181,21 @@ def _dataclasses_fields(class_or_instance):
         or f._field_type is dataclasses._FIELD_INITVAR
     )
 
+def _dataclass_types(cls):
+    """ Workaround for https://github.com/python/cpython/issues/137891
+
+    Note that, contrary to dataclasses.fields, the annotations for the base fields are
+    not propagated automatically, so they need to be extracted from the base classes.
+    """
+    res = {}
+
+    # Base classes, including current one, from parent to child, excluding object
+    for base in cls.__mro__[1::-1]:
+        if dataclasses.is_dataclass(base):
+            res.update(base.__annotations__)
+
+    return res
+
 
 def _dataclass_required_allowed(fields):
     allowed = set()
@@ -210,7 +225,7 @@ def _parse_dataclass(value, spec):
         f"fields do not match.",
     )
     # Note: We don't use field.type because of https://github.com/python/cpython/issues/137891
-    types = spec.__annotations__
+    types = _dataclass_types(spec)
 
     res = {}
     field_dict = {
