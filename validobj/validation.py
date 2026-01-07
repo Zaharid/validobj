@@ -190,7 +190,7 @@ def _dataclass_types(cls):
     res = {}
 
     # Base classes, including current one, from parent to child, excluding object
-    for base in cls.__mro__[1::-1]:
+    for base in cls.__mro__[-2::-1]:
         if dataclasses.is_dataclass(base):
             res.update(base.__annotations__)
 
